@@ -1,70 +1,90 @@
-using System;
-using System.Data.SqlClient;
+## Comandos Para Criar as Tabelas do Banco de Dados DB_Fazenda:
 
-namespace Fazenda_PIM2024
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Nome:");
-            string nome = Console.ReadLine();
+CREATE TABLE CLIENTE
+(
+    ID_CLIENTE INT PRIMARY KEY IDENTITY NOT NULL,
+    NOME VARCHAR (100)NOT NULL,
+	CPF CHAR (11)UNIQUE NOT NULL,
+	EMAIL VARCHAR(100)NOT NULL,
+	TELEFONE_CELULAR VARCHAR(15)NOT NULL,
+	TELEFONE_RESIDENCIAL VARCHAR(15),
+	TELEFONE_COMERCIAL VARCHAR(15),
+	ENDERECO VARCHAR(150)
+);
 
-            Console.WriteLine("CPF/CNPJ (Somente Números):");
-            string cpf = Console.ReadLine();
+CREATE TABLE PRODUTO(
+    ID_PRODUTO INT PRIMARY KEY NOT NULL,
+	NOME VARCHAR(50)NOT NULL,
+	PREÇO DECIMAL(15,2) NOT NULL,
+	ESTOQUE INT NOT NULL
+);
 
-            Console.WriteLine("Digite o e-mail:");
-            string email = Console.ReadLine();
+CREATE TABLE PEDIDO(
+    ID_PEDIDO INT PRIMARY KEY NOT NULL,
+	ID_PRODUTO INT NOT NULL,
+	ID_CLIENTE INT NOT NULL,
+	QUANTIDADE INT NOT NULL,
+);
 
-            Console.WriteLine("Digite a senha:");
-            string senha = Console.ReadLine();
+-- CLIENTE X PEDIDO
+ALTER TABLE PEDIDO 
+    ADD CONSTRAINT fk_CLIENTEPEDIDO FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTE (ID_CLIENTE);
 
-            Console.WriteLine("Digite o telefone celular:");
-            string telefoneCelular = Console.ReadLine();
+--PEDIDO X PRODUTO 
+ALTER TABLE PEDIDO
+    ADD CONSTRAINT fk_PEDPROD FOREIGN KEY (ID_PRODUTO) REFERENCES PRODUTO (ID_PRODUTO);
 
-            Console.WriteLine("Digite o telefone residencial (opcional):");
-            string telefoneResidencial = Console.ReadLine();
+--PEDIDO X CLIENTE
+ALTER TABLE PEDIDO
+    ADD CONSTRAINT fk_PEDIDOCLIENTE FOREIGN KEY(ID_CLIENTE) REFERENCES CLIENTE (ID_CLIENTE);
 
-            Console.WriteLine("Digite o telefone comercial (opcional):");
-            string telefoneComercial = Console.ReadLine();
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (1,'Autumn Crisp 500g',16,15);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (2,'Autumn Crisp 5Kg',150,7);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (3,'Autumn Crisp 10Kg',300,8);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (4,'Autumn Crisp 20Kg',500,10);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (5,'Autumn Crisp 50Kg',1000,5);
 
-            Console.WriteLine("Digite o endereço:");
-            string endereco = Console.ReadLine();
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (6,'Arra32 500g',16,8);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (7,'Arra32 5Kg',150,10);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (8,'Arra32 10Kg',300,12);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (9,'Arra32 20Kg',500,6);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (10,'Arra32 50Kg',1000,9);
 
-            Console.WriteLine("Pressione Enter para salvar...");
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (11,'Melodia 500g',16,15);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (12,'Melodia 5Kg',150,18);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (13,'Melodia 10Kg',300,13);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (14,'Melodia 20Kg',500,8);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (15,'Melodia 50Kg',1000,5);
 
-            // Aguardando o pressionamento da tecla Enter
-            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (16,'Scarlotta 500g',16,19);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (17,'Scarlotta 5Kg',150,11);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (18,'Scarlotta 10Kg',300,17);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (19,'Scarlotta 20Kg',500,6);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (20,'Scarlotta 50Kg',1000,3);
 
-            // Salvar os dados no banco de dados
-            SalvarCliente(nome, cpf, email, senha, telefoneCelular, telefoneResidencial, telefoneComercial, endereco);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (21,'Uva passa 500g',16,25);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (22,'Uva passa 5Kg',150,17);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (23,'Uva passa 10Kg',300,12);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (24,'Uva passa 20Kg',500,8);
+INSERT INTO PRODUTO(ID_PRODUTO,NOME,PREÇO,ESTOQUE) VALUES (25,'Uva passa 50Kg',1000,10);
 
-            Console.WriteLine("Cadastrado com sucesso!");
-            Console.ReadLine();
-        }
+## Após reunião do grupo para ajustes, acrescentamos mais uma coluna na tabela CLIENTE com o nome de SENHA e altermaos o nome da coluna CPF para CPF_CNPJ
+criamos e configuramos com os seguintes comandos:
 
-        static void SalvarCliente(string nome, string cpf, string email, string senha, string telefoneCelular, string telefoneResidencial, string telefoneComercial, string endereco)
-        {
-            string connectionString = @"Data Source=SAMSUMG-LEO15\SQLSERVER2022;Initial Catalog=DB_Fazenda;Integrated Security=True";
+## Ajustes feitos para acrescentar a coluna SENHA:
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = @"INSERT INTO CLIENTE (NOME, CPF_CNPJ, EMAIL, SENHA, TELEFONE_CELULAR, TELEFONE_RESIDENCIAL, TELEFONE_COMERCIAL, ENDERECO)
-                                VALUES (@Nome, @Cpf, @Email, @Senha, @TelefoneCelular, @TelefoneResidencial, @TelefoneComercial, @Endereco)";
+ALTER TABLE CLIENTE
+ADD SENHA VARCHAR(50);
 
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Nome", nome);
-                command.Parameters.AddWithValue("@Cpf", cpf);
-                command.Parameters.AddWithValue("@Email", email);
-                command.Parameters.AddWithValue("@Senha", senha);
-                command.Parameters.AddWithValue("@TelefoneCelular", telefoneCelular);
-                command.Parameters.AddWithValue("@TelefoneResidencial", string.IsNullOrEmpty(telefoneResidencial) ? (object)DBNull.Value : telefoneResidencial);
-                command.Parameters.AddWithValue("@TelefoneComercial", string.IsNullOrEmpty(telefoneComercial) ? (object)DBNull.Value : telefoneComercial);
-                command.Parameters.AddWithValue("@Endereco", string.IsNullOrEmpty(endereco) ? (object)DBNull.Value : endereco);
 
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
-        }
-    }
-}
+ALTER TABLE CLIENTE
+ADD CONSTRAINT DF_SENHA DEFAULT 'senha_padrao' FOR SENHA;
+
+
+ALTER TABLE CLIENTE
+ADD CONSTRAINT CHK_SENHA_LENGTH CHECK (LEN(SENHA) >= 8);
+
+## Ajustes feitos para alterar o nome da coluna CPF para CPF_CNPJ:
+
+
+EXEC sp_rename 'CLIENTE.CPF', 'CPF_CNPJ', 'COLUMN';
