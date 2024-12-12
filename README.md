@@ -9,4 +9,4 @@ Leonardo Dias Pereira (G824GC9)
 Victor Santos Aguiar (G78GGD1)
 Isaac Almeida Belo (N069HF0)
 
-Agradecemos o esforço e a colaboração de todos os membros do grupo para o desenvolvimento deste projeto.
+
